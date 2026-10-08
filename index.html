@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunar Birthday Calendar | 中国农历生日助手</title>
+  <meta name="description" content="Never miss your Chinese friends' birthdays. Track lunar birthdays, calculate Gregorian dates for 20 years, and sync to Google Calendar.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%220%22%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>🏮</text></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FEF2F2',
+              100: '#FEE2E2',
+              200: '#FECACA',
+              300: '#FCA5A5',
+              400: '#F87171',
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C',
+              800: '#991B1B',
+              900: '#7F1D1D',
+            },
+            festive: {
+              gold: '#D97706',
+              lightGold: '#FEF3C7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-festive-pattern min-h-screen flex flex-col text-slate-800 antialiased selection:bg-red-100 selection:text-red-900">
+
+  <!-- Sticky Top Navigation -->
+  <header class="sticky top-0 z-40 glass-header border-b border-slate-200/80 shadow-sm transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
+        
+        <!-- Brand Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white shadow-md shadow-red-500/20 text-2xl flex-shrink-0">
+            🏮
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900 leading-tight" data-i18n="appTitle">
+                Lunar Birthday Calendar
+              </h1>
+              <span class="hidden md:inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                20-Year Sync
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 hidden sm:block truncate max-w-md" data-i18n="appSubtitle">
+              Never miss your Chinese friends’ birthdays. Calculate Gregorian dates for 20 years.
+            </p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Language Toggle Button -->
+          <button id="langToggleBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition shadow-sm" title="Toggle Language">
+            <i data-lucide="languages" class="w-4 h-4 text-slate-500"></i>
+            <span id="langToggleText">中文</span>
+          </button>
+
+          <!-- Backup / Data Dropdown Menu -->
+          <div class="relative">
+            <button id="backupMenuBtn" type="button" class="p-2 sm:px-3 sm:py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition shadow-sm inline-flex items-center gap-1.5" title="Data & Backup">
+              <i data-lucide="hard-drive-download" class="w-4 h-4 text-slate-500"></i>
+              <span class="hidden md:inline" data-i18n="backupRestore">Backup</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 hidden sm:inline"></i>
+            </button>
+            <div id="backupMenuDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-2xl bg-white shadow-xl border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-2">
+              <button id="exportJsonBtn" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2.5">
+                <i data-lucide="download" class="w-4 h-4 text-slate-400"></i>
+                <span data-i18n="exportJson">Export Backup (JSON)</span>
+              </button>
+              <button id="importJsonBtn" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2.5">
+                <i data-lucide="upload" class="w-4 h-4 text-slate-400"></i>
+                <span data-i18n="importJson">Import Backup (JSON)</span>
+              </button>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button id="clearDemoBtn" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5">
+                <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
+                <span data-i18n="clearDemoData">Clear Sample Friends</span>
+              </button>
+              <button id="restoreDemoBtn" class="w-full text-left px-4 py-2.5 text-xs sm:text-sm text-slate-600 hover:bg-slate-50 flex items-center gap-2.5">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 text-slate-400"></i>
+                <span data-i18n="restoreDemoData">Restore Sample Friends</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Export All to Google Calendar / .ics -->
+          <button id="exportAllIcsBtn" type="button" class="hidden lg:inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm">
+            <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+            <span data-i18n="exportAllBtn">Export All (20 Years)</span>
+          </button>
+
+          <!-- Add Friend Primary Button -->
+          <button id="openAddModalBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition shadow-md shadow-red-600/20">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span data-i18n="addFriendBtn">Add Friend</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6">
+
+    <!-- Sample Data Notice Banner (dismissible) -->
+    <div id="sampleDataBanner" class="hidden rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center flex-shrink-0 text-lg">
+          💡
+        </div>
+        <p class="text-sm text-amber-900" data-i18n="sampleDataNotice">
+          You are currently viewing sample friends. Feel free to explore, or click to clear sample data.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 self-end sm:self-auto">
+        <button id="bannerClearSampleBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-amber-300 text-amber-800 hover:bg-amber-100 transition shadow-sm" data-i18n="clearSampleBtn">
+          Clear Samples
+        </button>
+        <button id="bannerDismissBtn" class="p-1.5 text-amber-500 hover:text-amber-700 rounded-lg">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cultural Guide Accordion Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition-all">
+      <button id="toggleGuideBtn" class="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-slate-50/80 transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🏮</span>
+          <span class="text-sm sm:text-base font-bold text-slate-900" data-i18n="guideTitle">
+            Cultural Guide: Understanding Chinese Lunar Birthdays
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400 hidden sm:inline">FAQ & Tips</span>
+          <i id="guideChevron" data-lucide="chevron-down" class="w-4 h-4 text-slate-500 transition-transform"></i>
+        </div>
+      </button>
+
+      <div id="guideContent" class="hidden px-5 pb-5 pt-1 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4 text-slate-600 text-xs sm:text-sm">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2" data-i18n="guideFact1Title">
+            🌙 1. What is the Chinese Lunar Calendar?
+          </h4>
+          <p class="text-slate-600 leading-relaxed" data-i18n="guideFact1Body">
+            The Chinese calendar is lunisolar based on moon phases and sun cycles. A lunar month has 29 or 30 days, making the lunar year ~11 days shorter than the Gregorian calendar.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2" data-i18n="guideFact2Title">
+            📅 2. Why does the Gregorian date shift every year?
+          </h4>
+          <p class="text-slate-600 leading-relaxed" data-i18n="guideFact2Body">
+            Because of the 11-day difference, a fixed lunar date shifts by 10 to 20 days on the Gregorian calendar each year. Standard recurring events in Google Calendar fail, so this app projects exact dates!
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2" data-i18n="guideFact3Title">
+            🔄 3. What is a "Leap Month" (闰月)?
+          </h4>
+          <p class="text-slate-600 leading-relaxed" data-i18n="guideFact3Body">
+            To keep lunar months aligned with climate seasons, a 13th month is inserted ~7 times every 19 years. People born in a leap month celebrate on the regular month in standard years.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-1.5">
+          <h4 class="font-bold text-slate-800 flex items-center gap-2" data-i18n="guideFact4Title">
+            🐉 4. Chinese Zodiac Animals (生肖)
+          </h4>
+          <p class="text-slate-600 leading-relaxed" data-i18n="guideFact4Body">
+            The Chinese Zodiac is a 12-year animal cycle: Rat, Ox, Tiger, Rabbit, Dragon, Snake, Horse, Goat, Monkey, Rooster, Dog, and Pig. Each year is represented by one sacred animal!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Bar: Search & Filter Tabs -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      
+      <!-- Filter Tabs -->
+      <div class="flex items-center gap-1.5 p-1 bg-slate-200/70 rounded-2xl w-fit">
+        <button id="filterAllBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-xl bg-white text-slate-900 shadow-sm transition">
+          <span data-i18n="filterAll">All Friends</span> (<span id="countAll">0</span>)
+        </button>
+        <button id="filterUpcomingBtn" class="px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-xl text-slate-600 hover:text-slate-900 transition">
+          <span data-i18n="filterUpcoming">Upcoming (60 Days)</span> (<span id="countUpcoming">0</span>)
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-72">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+        <input id="searchInput" type="text" placeholder="Search friends or notes..." class="w-full pl-10 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm">
+        <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Friends Cards Grid -->
+    <div id="friendsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Dynamically rendered via app.js -->
+    </div>
+
+    <!-- Empty State View -->
+    <div id="emptyState" class="hidden py-16 px-4 text-center bg-white rounded-3xl border border-dashed border-slate-300 max-w-xl mx-auto space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-red-50 text-red-600 flex items-center justify-center text-3xl shadow-inner">
+        🎂
+      </div>
+      <div class="space-y-1">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900" data-i18n="emptyTitle">
+          No birthdays found
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto" data-i18n="emptyDesc">
+          Add your first Chinese friend to keep track of their changing lunar birthdays!
+        </p>
+      </div>
+      <div>
+        <button id="emptyAddBtn" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-xl bg-red-600 text-white hover:bg-red-700 transition shadow-md shadow-red-600/20">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          <span data-i18n="emptyAddBtn">Add First Friend</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>
+        🏮 <strong>Lunar Birthday Calendar</strong> • Built for global friends & Chinese culture lovers.
+      </p>
+      <p class="flex items-center gap-3">
+        <span>Zero server tracking • LocalStorage private</span>
+        <span>•</span>
+        <span>Ready for Cloudflare Pages</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: ADD / EDIT FRIEND -->
+  <!-- ============================================================== -->
+  <div id="friendModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg w-full overflow-hidden modal-content my-8">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-lg">
+            🎂
+          </div>
+          <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-slate-900" data-i18n="modalAddTitle">
+            Add New Friend
+          </h3>
+        </div>
+        <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="friendForm" class="p-6 space-y-5">
+        <input type="hidden" id="friendId" value="">
+
+        <!-- Name Input -->
+        <div class="space-y-1.5">
+          <label class="block text-xs sm:text-sm font-bold text-slate-700" data-i18n="fieldFriendName">
+            Friend Name *
+          </label>
+          <input id="inputName" type="text" required placeholder="e.g. Xiao Ming, David Li, or Zhang Wei" class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl text-xs sm:text-sm font-bold">
+            <button type="button" id="tabLunarMode" class="py-2 rounded-xl bg-white shadow-sm text-slate-900 transition flex items-center justify-center gap-1.5" data-i18n="tabLunarMode">
+              <span>🌙</span> <span>Input Lunar Date</span>
+            </button>
+            <button type="button" id="tabSolarMode" class="py-2 rounded-xl text-slate-500 hover:text-slate-900 transition flex items-center justify-center gap-1.5" data-i18n="tabSolarMode">
+              <span>☀️</span> <span>Convert Solar Date</span>
+            </button>
+          </div>
+
+          <!-- Section 1: Lunar Input Fields -->
+          <div id="sectionLunarInput" class="space-y-4 p-4 rounded-2xl bg-red-50/40 border border-red-100">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lunarMonthLabel">Lunar Month *</label>
+                <select id="inputLunarMonth" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <!-- Populated via app.js (1-12) -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="lunarDayLabel">Lunar Day *</label>
+                <select id="inputLunarDay" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-red-500 focus:outline-none">
+                  <!-- Populated via app.js (1-30) -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Leap Month Checkbox -->
+            <div class="flex items-start gap-2 pt-1">
+              <input id="inputIsLeap" type="checkbox" class="mt-0.5 rounded text-red-600 focus:ring-red-500 border-slate-300">
+              <label for="inputIsLeap" class="text-xs text-slate-600 cursor-pointer">
+                <span class="font-bold text-slate-800" data-i18n="isLeapCheckbox">Born in a Leap Month (闰月)</span>
+                <span class="block text-[11px] text-slate-400 mt-0.5" data-i18n="leapExplanation">
+                  Inserted ~7 times every 19 years to balance seasons.
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Section 2: Solar Input & Convert Fields -->
+          <div id="sectionSolarInput" class="hidden space-y-4 p-4 rounded-2xl bg-amber-50/50 border border-amber-100">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold text-slate-700" data-i18n="solarPickerLabel">
+                Select Known Gregorian Date *
+              </label>
+              <input id="inputSolarDate" type="date" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none">
+              <p class="text-[11px] text-slate-500" data-i18n="solarPickerHint">
+                Pick either their original Gregorian birth date or a known solar celebration date.
+              </p>
+            </div>
+
+            <div id="solarConvertResultBox" class="p-3 bg-white rounded-xl border border-amber-200 flex items-center justify-between text-xs">
+              <div>
+                <span class="text-slate-400 block" data-i18n="solarConvertedResult">Converted Lunar Date:</span>
+                <span id="solarConvertedLunarStr" class="font-bold text-amber-900 text-sm">--</span>
+              </div>
+              <div id="solarConvertedZodiac" class="text-xl">
+                🐉
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Upcoming Solar Date Preview -->
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center justify-between text-xs">
+            <span class="text-slate-500 font-medium" data-i18n="previewUpcomingTitle">Next Birthday (Gregorian):</span>
+            <span id="liveUpcomingPreview" class="font-bold text-red-600 text-sm">--</span>
+          </div>
+        </div>
+
+        <!-- Optional Fields: Birth Year & Notes -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-700" data-i18n="fieldBirthYear">
+              Birth Year (Optional)
+            </label>
+            <input id="inputBirthYear" type="number" min="1900" max="2099" placeholder="e.g. 1996" class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500">
+            <p id="zodiacPreviewNote" class="text-[11px] text-slate-400">Enables Zodiac & Age</p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-xs font-bold text-slate-700" data-i18n="fieldNotes">
+              Relationship / Notes (Optional)
+            </label>
+            <input id="inputNotes" type="text" placeholder="e.g. College roommate" class="w-full px-3.5 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500">
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+          <button type="button" id="cancelModalBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition" data-i18n="modalCancel">
+            Cancel
+          </button>
+          <button type="submit" id="submitFriendBtn" class="px-5 py-2 text-sm font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-md shadow-red-600/20 transition" data-i18n="modalSave">
+            Save Friend
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: 20-YEAR SCHEDULE TABLE -->
+  <!-- ============================================================== -->
+  <div id="projectionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-2xl w-full overflow-hidden modal-content my-8">
+      
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div>
+          <h3 id="projModalTitle" class="text-base sm:text-lg font-bold text-slate-900">
+            Xiao Ming’s 20-Year Birthday Schedule
+          </h3>
+          <p id="projModalSubtitle" class="text-xs text-slate-500 mt-0.5">
+            Gregorian dates for the next 20 years
+          </p>
+        </div>
+        <button id="closeProjModalBtn" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="px-6 py-3 bg-red-50/50 border-b border-red-100 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-xs text-red-900">
+          <i data-lucide="calendar-check" class="w-4 h-4 text-red-600"></i>
+          <span>Ready to import into Google, Apple, or Outlook</span>
+        </div>
+        <button id="downloadFriendIcsBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-red-600 text-white hover:bg-red-700 transition shadow-sm">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span data-i18n="downloadThis20YearIcs">Download .ics (20 Years)</span>
+        </button>
+      </div>
+
+      <!-- 20-Year Table -->
+      <div class="max-h-96 overflow-y-auto px-6 py-2">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="sticky top-0 bg-white border-b border-slate-200 text-slate-500 font-semibold">
+            <tr>
+              <th class="py-2.5 px-3" data-i18n="colYear">Lunar Year</th>
+              <th class="py-2.5 px-3" data-i18n="colSolarDate">Gregorian Date</th>
+              <th class="py-2.5 px-3" data-i18n="colDayOfWeek">Day of Week</th>
+              <th class="py-2.5 px-3 text-right" data-i18n="colAge">Age</th>
+            </tr>
+          </thead>
+          <tbody id="projTableBody" class="divide-y divide-slate-100 text-slate-700 font-medium">
+            <!-- Rows injected by app.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+        <button id="closeProjModalFooterBtn" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-200/80 rounded-xl transition" data-i18n="closeModal">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hidden File Input for JSON restore -->
+  <input type="file" id="importJsonFileInput" accept=".json,application/json" class="hidden">
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
+    <!-- Toasts injected dynamically -->
+  </div>
+
+  <!-- Dependencies & Core Scripts -->
+  <script src="lunar.js"></script>
+  <script src="js/lunar-calc.js"></script>
+  <script src="js/ics-export.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
