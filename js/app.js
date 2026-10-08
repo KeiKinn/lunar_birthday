@@ -303,18 +303,25 @@
         <!-- Card Top Bar: Zodiac Avatar & Name & Status -->
         <div>
           <div class="flex items-start justify-between gap-3 mb-3">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-amber-50 border border-red-100 flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
+            <div class="flex items-start gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-amber-50 border border-amber-200/70 flex items-center justify-center text-2xl shadow-inner flex-shrink-0">
                 ${zodiacEmoji}
               </div>
               <div>
-                <h3 class="text-base font-bold text-slate-900 leading-snug break-words">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-tight break-words">
                   ${escapeHtml(friend.name)}
                 </h3>
-                <div class="flex items-center gap-2 text-xs text-slate-500 font-medium mt-0.5">
-                  ${ageText ? `<span>${ageText}</span>` : ''}
-                  ${ageText && zodiacText ? `<span>•</span>` : ''}
-                  ${zodiacText ? `<span>${zodiacText}</span>` : ''}
+                <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+                  ${ageText ? `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-red-100 text-red-700 border border-red-200 shadow-xs">
+                      🎂 ${ageText}
+                    </span>
+                  ` : ''}
+                  ${upcoming.zodiac ? `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-bold bg-amber-100/80 text-amber-900 border border-amber-200/90 shadow-xs">
+                      ${zodiacEmoji} ${lang === 'zh' ? `属${upcoming.zodiac.zh}` : `Year of the ${upcoming.zodiac.en}`}
+                    </span>
+                  ` : ''}
                 </div>
               </div>
             </div>

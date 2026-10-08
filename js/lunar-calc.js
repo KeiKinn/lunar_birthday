@@ -8,18 +8,18 @@
   'use strict';
 
   const ZODIAC_DATA = [
-    { zh: '鼠', en: 'Rat', emoji: '🐀' },
-    { zh: '牛', en: 'Ox', emoji: '🐂' },
-    { zh: '虎', en: 'Tiger', emoji: '🐅' },
-    { zh: '兔', en: 'Rabbit', emoji: '🐇' },
-    { zh: '龙', en: 'Dragon', emoji: '🐉' },
+    { zh: '鼠', en: 'Rat', emoji: '🐭' },
+    { zh: '牛', en: 'Ox', emoji: '🐮' },
+    { zh: '虎', en: 'Tiger', emoji: '🐯' },
+    { zh: '兔', en: 'Rabbit', emoji: '🐰' },
+    { zh: '龙', en: 'Dragon', emoji: '🐲' },
     { zh: '蛇', en: 'Snake', emoji: '🐍' },
-    { zh: '马', en: 'Horse', emoji: '🐎' },
-    { zh: '羊', en: 'Goat', emoji: '🐐' },
-    { zh: '猴', en: 'Monkey', emoji: '🐒' },
-    { zh: '鸡', en: 'Rooster', emoji: '🐓' },
-    { zh: '狗', en: 'Dog', emoji: '🐕' },
-    { zh: '猪', en: 'Pig', emoji: '🐖' }
+    { zh: '马', en: 'Horse', emoji: '🐴' },
+    { zh: '羊', en: 'Goat', emoji: '🐑' },
+    { zh: '猴', en: 'Monkey', emoji: '🐵' },
+    { zh: '鸡', en: 'Rooster', emoji: '🐔' },
+    { zh: '狗', en: 'Dog', emoji: '🐶' },
+    { zh: '猪', en: 'Pig', emoji: '🐷' }
   ];
 
   const LUNAR_MONTH_NAMES_ZH = [

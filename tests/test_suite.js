@@ -233,13 +233,23 @@
     assertEqual(window.LunarCalc.formatLunarDate(8, 15, false, 'zh'), '八月十五', 'Lunar 8-15 formats as 八月十五 in Chinese');
     assertEqual(window.LunarCalc.formatLunarDate(4, 8, true, 'zh'), '闰四月初八', 'Leap lunar 4-8 formats as 闰四月初八 in Chinese');
 
-    // Test Zodiac calculation
+    // Test Zodiac calculation with upgraded friendly emojis
+    const z1995 = window.LunarCalc.getZodiacForYear(1995);
+    assertEqual(z1995.zh, '猪', '1995 Zodiac is Pig (猪)');
+    assertEqual(z1995.emoji, '🐷', '1995 Pig emoji is 🐷 (friendly face)');
+
+    const z1994 = window.LunarCalc.getZodiacForYear(1994);
+    assertEqual(z1994.zh, '狗', '1994 Zodiac is Dog (狗)');
+    assertEqual(z1994.emoji, '🐶', '1994 Dog emoji is 🐶 (friendly face)');
+
     const z1996 = window.LunarCalc.getZodiacForYear(1996);
     assertEqual(z1996.zh, '鼠', '1996 Zodiac is Rat (鼠)');
     assertEqual(z1996.en, 'Rat', '1996 Zodiac English is Rat');
+    assertEqual(z1996.emoji, '🐭', '1996 Rat emoji is 🐭');
 
     const z2000 = window.LunarCalc.getZodiacForYear(2000);
     assertEqual(z2000.zh, '龙', '2000 Zodiac is Dragon (龙)');
+    assertEqual(z2000.emoji, '🐲', '2000 Dragon emoji is 🐲');
 
     // Test upcoming birthday
     const testFriend = {
