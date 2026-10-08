@@ -64,8 +64,8 @@
       tabSolarMode: '☀️ Convert from Solar Date',
       fieldFriendName: 'Friend Name',
       fieldFriendNamePlaceholder: 'e.g., Xiao Ming, David Li, or Zhang Wei',
-      fieldBirthYear: 'Birth Year (Optional)',
-      fieldBirthYearPlaceholder: 'e.g., 1996 (enables Age & Zodiac)',
+      fieldBirthYear: 'Birth Year *',
+      fieldBirthYearPlaceholder: 'e.g., 1996 (calculates Age & Zodiac)',
       fieldNotes: 'Relationship / Notes (Optional)',
       fieldNotesPlaceholder: 'e.g., High school friend, College roommate, Loves matcha',
 
@@ -173,8 +173,8 @@
       tabSolarMode: '☀️ 按阳历转换',
       fieldFriendName: '朋友姓名',
       fieldFriendNamePlaceholder: '例如：小明、张伟 或 David Li',
-      fieldBirthYear: '出生年份（选填）',
-      fieldBirthYearPlaceholder: '例如：1996（用于自动计算岁数与生肖）',
+      fieldBirthYear: '出生年份 *',
+      fieldBirthYearPlaceholder: '例如：1996（用于计算岁数与生肖）',
       fieldNotes: '关系/备注（选填）',
       fieldNotesPlaceholder: '例如：大学室友、吃货、喜欢吃抹茶蛋糕',
 

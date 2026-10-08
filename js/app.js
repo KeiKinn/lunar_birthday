@@ -552,14 +552,24 @@
     e.preventDefault();
 
     const name = elements.inputName.value.trim();
-    if (!name) return;
+    if (!name) {
+      elements.inputName.focus();
+      return;
+    }
+
+    const birthYearVal = elements.inputBirthYear.value ? String(elements.inputBirthYear.value).trim() : '';
+    const birthYear = Number(birthYearVal);
+    if (!birthYearVal || isNaN(birthYear) || birthYear < 1900 || birthYear > 2099) {
+      elements.inputBirthYear.focus();
+      return;
+    }
 
     const friendData = {
       name: name,
       lunarMonth: Number(elements.inputLunarMonth.value),
       lunarDay: Number(elements.inputLunarDay.value),
       isLeap: elements.inputIsLeap.checked,
-      birthYear: elements.inputBirthYear.value ? Number(elements.inputBirthYear.value) : null,
+      birthYear: birthYear,
       notes: elements.inputNotes.value.trim()
     };
 

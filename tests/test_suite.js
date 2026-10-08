@@ -370,13 +370,26 @@
     addBtn.dispatchEvent('click');
     assert(!friendModal.classList.contains('hidden'), 'Clicking Add Friend opens modal');
 
-    // Test fill and submit friend form
+    // Test that submitting without birthYear is blocked
+    mockDomElements['inputName'].value = 'Blocked User';
+    mockDomElements['inputBirthYear'].value = '';
+    const initialCount = window.FriendStorage.loadFriends().length;
+
+    const friendForm = mockDomElements['friendForm'];
+    friendForm.dispatchEvent({
+      type: 'submit',
+      preventDefault: function () {}
+    });
+
+    const countAfterBlocked = window.FriendStorage.loadFriends().length;
+    assertEqual(countAfterBlocked, initialCount, 'Form submission without birthYear is blocked');
+
+    // Test fill and submit friend form with required birthYear
     mockDomElements['inputName'].value = 'Test User TDD';
     mockDomElements['inputLunarMonth'].value = '8';
     mockDomElements['inputLunarDay'].value = '15';
     mockDomElements['inputBirthYear'].value = '1995';
 
-    const friendForm = mockDomElements['friendForm'];
     friendForm.dispatchEvent({
       type: 'submit',
       preventDefault: function () {}
@@ -385,6 +398,7 @@
     const currentFriends = window.FriendStorage.loadFriends();
     const created = currentFriends.find(f => f.name === 'Test User TDD');
     assert(created !== undefined, 'Form submission creates friend in storage');
+    assertEqual(created.birthYear, 1995, 'Created friend has required birthYear stored');
     assert(friendModal.classList.contains('hidden'), 'Modal closes after submission');
 
     // Test 20-Year projection modal
