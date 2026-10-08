@@ -104,7 +104,7 @@
       opt.value = m;
       opt.textContent = lang === 'zh'
         ? `${monthsZh[m - 1]} (${m}月)`
-        : `${monthsEn[m - 1]} (${monthsZh[m - 1]})`;
+        : `Lunar ${monthsEn[m - 1]} (${monthsZh[m - 1]})`;
       elements.inputLunarMonth.appendChild(opt);
     }
 

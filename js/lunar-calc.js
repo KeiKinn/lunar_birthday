@@ -28,8 +28,8 @@
   ];
 
   const LUNAR_MONTH_NAMES_EN = [
-    '1st Month', '2nd Month', '3rd Month', '4th Month', '5th Month', '6th Month',
-    '7th Month', '8th Month', '9th Month', '10th Month', '11th Month', '12th Month'
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
 
   const LUNAR_DAY_NAMES_ZH = [
@@ -102,11 +102,11 @@
         lunarDay: day,
         isLeap: isLeap,
         monthZh: (isLeap ? '闰' : '') + (LUNAR_MONTH_NAMES_ZH[absMonth - 1] || `${absMonth}月`),
-        monthEn: (isLeap ? 'Leap ' : '') + (LUNAR_MONTH_NAMES_EN[absMonth - 1] || `Month ${absMonth}`),
+        monthEn: (isLeap ? 'Lunar Leap-' : 'Lunar ') + (LUNAR_MONTH_NAMES_EN[absMonth - 1] || `Month ${absMonth}`),
         dayZh: LUNAR_DAY_NAMES_ZH[day - 1] || `第${day}天`,
         dayEn: `Day ${day}`,
         fullZh: `${isLeap ? '闰' : ''}${LUNAR_MONTH_NAMES_ZH[absMonth - 1] || `${absMonth}月`}${LUNAR_DAY_NAMES_ZH[day - 1] || day}`,
-        fullEn: `${isLeap ? 'Leap ' : ''}${LUNAR_MONTH_NAMES_EN[absMonth - 1] || `Month ${absMonth}`}, Day ${day}`,
+        fullEn: `Lunar ${isLeap ? 'Leap-' : ''}${LUNAR_MONTH_NAMES_EN[absMonth - 1] || `Month ${absMonth}`} ${day}`,
         zodiacZh: zodiacChar,
         zodiacEn: zodiacMatch ? zodiacMatch.en : '',
         zodiacEmoji: zodiacMatch ? zodiacMatch.emoji : '🐉'
@@ -288,15 +288,16 @@
   function formatLunarDate(lunarMonth, lunarDay, isLeap, lang) {
     const m = Math.abs(Number(lunarMonth));
     const d = Number(lunarDay);
-    const leapStr = isLeap ? (lang === 'zh' ? '闰' : 'Leap ') : '';
+    const leapStrZh = isLeap ? '闰' : '';
+    const leapStrEn = isLeap ? 'Leap-' : '';
 
     if (lang === 'zh') {
       const mName = LUNAR_MONTH_NAMES_ZH[m - 1] || `${m}月`;
       const dName = LUNAR_DAY_NAMES_ZH[d - 1] || `${d}日`;
-      return `${leapStr}${mName}${dName}`;
+      return `${leapStrZh}${mName}${dName}`;
     } else {
       const mName = LUNAR_MONTH_NAMES_EN[m - 1] || `Month ${m}`;
-      return `${leapStr}${mName}, Day ${d}`;
+      return `Lunar ${leapStrEn}${mName} ${d}`;
     }
   }
 

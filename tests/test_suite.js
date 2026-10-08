@@ -226,6 +226,13 @@
     assert(solarRes !== null, 'lunarToSolar converts lunar date to solar date');
     assertEqual(solarRes.solarDateStr, '2024-09-17', 'Lunar 2024-08-15 matches Solar 2024-09-17');
 
+    // Test English and Chinese formatLunarDate (Lunar Jan 15 / Lunar Aug 15)
+    assertEqual(window.LunarCalc.formatLunarDate(8, 15, false, 'en'), 'Lunar Aug 15', 'Lunar 8-15 formats as Lunar Aug 15 in English');
+    assertEqual(window.LunarCalc.formatLunarDate(1, 1, false, 'en'), 'Lunar Jan 1', 'Lunar 1-1 formats as Lunar Jan 1 in English');
+    assertEqual(window.LunarCalc.formatLunarDate(4, 8, true, 'en'), 'Lunar Leap-Apr 8', 'Leap lunar 4-8 formats as Lunar Leap-Apr 8 in English');
+    assertEqual(window.LunarCalc.formatLunarDate(8, 15, false, 'zh'), '八月十五', 'Lunar 8-15 formats as 八月十五 in Chinese');
+    assertEqual(window.LunarCalc.formatLunarDate(4, 8, true, 'zh'), '闰四月初八', 'Leap lunar 4-8 formats as 闰四月初八 in Chinese');
+
     // Test Zodiac calculation
     const z1996 = window.LunarCalc.getZodiacForYear(1996);
     assertEqual(z1996.zh, '鼠', '1996 Zodiac is Rat (鼠)');
