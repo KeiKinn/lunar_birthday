@@ -244,6 +244,7 @@
         window.lucide.createIcons();
       }
     }
+  }
 
   /**
    * Build HTML for single friend card
